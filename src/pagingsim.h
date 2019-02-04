@@ -32,7 +32,7 @@ struct Page {
 	int page_frame_no;
 };
 
-void initialize(const char *filename,pthread_t *thread_id);
+void initialize(const char *filename, pthread_t * thread_id);
 void finalize(pthread_t thread_id);
 int execute(int page_frame_count);
 
