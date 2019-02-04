@@ -1,8 +1,8 @@
 #include "util.h"
 #include "pagingsim.h"
 #include <pthread.h>
-#include <unistd.h>		
-#include <stdlib.h>		
+#include <unistd.h>
+#include <stdlib.h>
 
 static FILE *memory_trace;
 static pthread_mutex_t mutex;
@@ -62,7 +62,7 @@ void *interrupt_clear_reference_bit(void *p)
 	return NULL;
 }
 
-void initialize(const char *filename,pthread_t *thread_id)
+void initialize(const char *filename, pthread_t * thread_id)
 {
 	memory_trace = xfopen(filename, "r");
 	pages = xmalloc((sizeof(struct Page) * MAX_PAGE_COUNT));
@@ -148,32 +148,35 @@ STATIC int get_pageouted_page_index(void)
 
 int execute(int page_frame_count)
 {
-    static int page_fault_count;
-    int page_frame_no;
-    int page_index;
-    int outed_page_index;
-    int used_page_frame_count = 0;
-    struct ProgramCounter pc;
+	static int page_fault_count;
+	int page_frame_no;
+	int page_index;
+	int outed_page_index;
+	int used_page_frame_count = 0;
+	struct ProgramCounter pc;
 
-    while (access_memory(&pc)) {
-        page_index = GET_PAGE_INDEX(pc.address);
-        if (is_page_fault(page_index, &page_fault_count)) {
-            printf("PF %x\n", pc.address);
-            if (should_pageout(page_frame_count, used_page_frame_count)) {
-                outed_page_index = get_pageouted_page_index();
-                printf("PO %x@%d\n", outed_page_index, pages[outed_page_index].page_frame_no);
-                page_frame_no = pages[outed_page_index].page_frame_no;
-                pageout(outed_page_index);
-                used_page_frame_count--;
-            } else {
-                page_frame_no = used_page_frame_count;
-            }
-            pagein(page_frame_no, page_index);
-            used_page_frame_count++;
-            printf("PI %x@%d\n", page_index,
-                pages[page_index].page_frame_no);
-        }
-        access_page(&pc, page_index);
+	while (access_memory(&pc)) {
+		page_index = GET_PAGE_INDEX(pc.address);
+		if (is_page_fault(page_index, &page_fault_count)) {
+			printf("PF %x\n", pc.address);
+			if (should_pageout
+			    (page_frame_count, used_page_frame_count)) {
+				outed_page_index = get_pageouted_page_index();
+				printf("PO %x@%d\n", outed_page_index,
+				       pages[outed_page_index].page_frame_no);
+				page_frame_no =
+				    pages[outed_page_index].page_frame_no;
+				pageout(outed_page_index);
+				used_page_frame_count--;
+			} else {
+				page_frame_no = used_page_frame_count;
+			}
+			pagein(page_frame_no, page_index);
+			used_page_frame_count++;
+			printf("PI %x@%d\n", page_index,
+			       pages[page_index].page_frame_no);
+		}
+		access_page(&pc, page_index);
 	}
-    return page_fault_count;
+	return page_fault_count;
 }
