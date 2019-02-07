@@ -1,4 +1,5 @@
 #include "util.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 FILE *xfopen(const char *path, const char *mode)
