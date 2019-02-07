@@ -15,9 +15,7 @@ STATIC enum PageClass get_page_class(int page_index)
 	int modified_bit = pages[page_index].modified_bit;
 	int reference_bit = pages[page_index].reference_bit;
 
-	if (pages[page_index].presence_bit == false) {
-		class = -1;
-	} else if (!reference_bit && !modified_bit) {
+	if (!reference_bit && !modified_bit) {
 		class = Class0;
 	} else if (!reference_bit && modified_bit) {
 		class = Class1;
@@ -86,8 +84,11 @@ STATIC int nru(void)
 	int page_indexes[MAX_CLASS_COUNT] = { -1, -1, -1, -1 };
 	enum PageClass class;
 	for (int i = 0; i < MAX_PAGE_COUNT; i++) {
+		if (pages[i].presence_bit == false) {
+			continue;
+		}
 		class = get_page_class(i);
-		if (class != -1 && page_indexes[class] == -1) {
+		if (page_indexes[class] == -1) {
 			page_indexes[class] = i;
 			if (class == Class0) {
 				break;
