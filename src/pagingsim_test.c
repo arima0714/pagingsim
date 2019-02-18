@@ -1,7 +1,7 @@
+#include "pagingsim.h"
+#include "util.h"
 #include <CUnit/CUnit.h>
 #include <CUnit/Console.h>
-#include "util.h"
-#include "pagingsim.h"
 
 extern struct Page *pages;
 int page_fault_count;

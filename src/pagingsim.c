@@ -1,8 +1,8 @@
-#include "util.h"
 #include "pagingsim.h"
+#include "util.h"
 #include <pthread.h>
-#include <unistd.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 static FILE *memory_trace;
 static pthread_mutex_t mutex;
