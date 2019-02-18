@@ -84,7 +84,7 @@ STATIC int nru(void)
 {
 	int page_indexes[MAX_CLASS_COUNT] = { -1, -1, -1, -1 };
 	enum PageClass class;
-	
+
 	for (int i = 0; i < MAX_PAGE_COUNT; i++) {
 		if (pages[i].presence_bit == false) {
 			continue;
@@ -132,15 +132,9 @@ STATIC bool should_pageout(int page_frame_count, int used_page_frame_count)
 	return page_frame_count <= used_page_frame_count;
 }
 
-STATIC bool is_page_fault(int page_index, int *page_fault_count)
+STATIC bool is_page_fault(int page_index)
 {
-	bool result = false;
-
-	if (!pages[page_index].presence_bit) {
-		(*page_fault_count)++;
-		result = true;
-	}
-	return result;
+	return !pages[page_index].presence_bit;
 }
 
 STATIC int get_pageouted_page_index(void)
@@ -160,7 +154,8 @@ int execute(int page_frame_count)
 
 	while (access_memory(&pc)) {
 		page_index = GET_PAGE_INDEX(pc.address);
-		if (is_page_fault(page_index, &page_fault_count)) {
+		if (is_page_fault(page_index)) {
+			page_fault_count++;
 			printf("PF %x\n", pc.address);
 			if (should_pageout
 			    (page_frame_count, used_page_frame_count)) {
