@@ -14,9 +14,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	page_frame_count = atoi(argv[1]);
-
-	initialize(argv[2], &thread_id);
+	initialize(argv, &thread_id, &page_frame_count);
 
 	printf("! %d %d\n", page_frame_count, execute(page_frame_count));
 	finalize(thread_id);

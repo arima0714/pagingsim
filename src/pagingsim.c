@@ -60,13 +60,14 @@ void *interrupt_clear_reference_bit(void *p)
 	return NULL;
 }
 
-void initialize(const char *filename, pthread_t * thread_id)
+void initialize(char **argv, pthread_t * thread_id, int *page_frame_count)
 {
-	memory_trace = xfopen(filename, "r");
+	memory_trace = xfopen(argv[2], "r");
 	pages = xmalloc((sizeof(struct Page) * MAX_PAGE_COUNT));
 	for (int i = 0; i < MAX_PAGE_COUNT; i++) {
 		clear_page(i);
 	}
+	*page_frame_count = atoi(argv[1]);
 	pthread_mutex_init(&mutex, NULL);
 	pthread_create(thread_id, NULL, &interrupt_clear_reference_bit, NULL);
 }
