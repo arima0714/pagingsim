@@ -9,6 +9,7 @@
 #else
 #define STATIC static
 #endif
+
 FILE *xfopen(const char *path, const char *mode);
 void *xmalloc(size_t size);
 #endif

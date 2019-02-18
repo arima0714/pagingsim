@@ -84,6 +84,7 @@ STATIC int nru(void)
 {
 	int page_indexes[MAX_CLASS_COUNT] = { -1, -1, -1, -1 };
 	enum PageClass class;
+	
 	for (int i = 0; i < MAX_PAGE_COUNT; i++) {
 		if (pages[i].presence_bit == false) {
 			continue;
