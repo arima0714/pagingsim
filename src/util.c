@@ -6,7 +6,7 @@ FILE *xfopen(const char *path, const char *mode)
 {
 	FILE *f = fopen(path, mode);
 	if (!f) {
-		perror("failed to reading file\n");
+		perror("Failed to reading file\n");
 		exit(1);
 	}
 	return f;
