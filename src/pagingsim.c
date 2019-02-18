@@ -51,7 +51,7 @@ STATIC void clear_all_reference_bit(void)
 	pthread_mutex_unlock(&mutex);
 }
 
-void *interrupt_clear_reference_bit(void *p)
+STATIC void *interrupt_clear_reference_bit(void *p)
 {
 	while (true) {
 		clear_all_reference_bit();
