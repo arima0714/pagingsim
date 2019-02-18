@@ -145,7 +145,7 @@ STATIC int get_pageouted_page_index(void)
 
 int execute(int page_frame_count)
 {
-	static int page_fault_count;
+	int page_fault_count = 0;
 	int page_frame_no;
 	int page_index;
 	int outed_page_index;
