@@ -160,10 +160,10 @@ int execute(int page_frame_count)
 			if (should_pageout
 			    (page_frame_count, used_page_frame_count)) {
 				outed_page_index = get_pageouted_page_index();
-				printf("PO %x@%d\n", outed_page_index,
-				       pages[outed_page_index].page_frame_no);
 				page_frame_no =
 				    pages[outed_page_index].page_frame_no;
+				printf("PO %x@%d\n", outed_page_index,
+				       page_frame_no);
 				pageout(outed_page_index);
 				used_page_frame_count--;
 			} else {
