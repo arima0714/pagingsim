@@ -6,7 +6,7 @@
 #define MAX_CLASS_COUNT 4
 #define MAX_PAGE_COUNT 1048576
 #define PAGE_SIZE 4096
-#define REFERENCE_BIT_CLEAR_USEC 20000
+#define REFERENCE_CLEAR_USEC 20000
 
 #include <pthread.h>
 #include <stdbool.h>
@@ -26,9 +26,9 @@ struct ProgramCounter {
 };
 
 struct Page {
-	bool modified_bit;
-	bool presence_bit;
-	bool reference_bit;
+	bool is_modified;
+	bool is_present;
+	bool is_referenced;
 	int page_frame_no;
 };
 

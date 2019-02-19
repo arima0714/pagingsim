@@ -12,14 +12,14 @@ STATIC enum PageClass get_page_class(int page_index)
 {
 	pthread_mutex_lock(&mutex);
 	enum PageClass class;
-	int modified_bit = pages[page_index].modified_bit;
-	int reference_bit = pages[page_index].reference_bit;
+	bool is_modified = pages[page_index].is_modified;
+	bool is_referenced = pages[page_index].is_referenced;
 
-	if (!reference_bit && !modified_bit) {
+	if (!is_referenced && !is_modified) {
 		class = Class0;
-	} else if (!reference_bit && modified_bit) {
+	} else if (!is_referenced && is_modified) {
 		class = Class1;
-	} else if (reference_bit && !modified_bit) {
+	} else if (is_referenced && !is_modified) {
 		class = Class2;
 	} else {
 		class = Class3;
@@ -30,32 +30,32 @@ STATIC enum PageClass get_page_class(int page_index)
 
 STATIC void access_page(struct ProgramCounter *pc, int page_index)
 {
-	pages[page_index].modified_bit = pc->access == WRITE;
-	pages[page_index].reference_bit = true;
+	pages[page_index].is_modified = pc->access == WRITE;
+	pages[page_index].is_referenced = true;
 }
 
 STATIC void clear_page(int page_index)
 {
-	pages[page_index].modified_bit = false;
+	pages[page_index].is_modified = false;
 	pages[page_index].page_frame_no = EMPTY;
-	pages[page_index].presence_bit = false;
-	pages[page_index].reference_bit = false;
+	pages[page_index].is_present = false;
+	pages[page_index].is_referenced = false;
 }
 
-STATIC void clear_all_reference_bit(void)
+STATIC void clear_all_is_referenced(void)
 {
 	pthread_mutex_lock(&mutex);
 	for (int i = 0; i < MAX_PAGE_COUNT; i++) {
-		pages[i].reference_bit = false;
+		pages[i].is_referenced = false;
 	}
 	pthread_mutex_unlock(&mutex);
 }
 
-STATIC void *interrupt_clear_reference_bit(void *p)
+STATIC void *interrupt_clear_is_referenced(void *p)
 {
 	while (true) {
-		clear_all_reference_bit();
-		usleep(REFERENCE_BIT_CLEAR_USEC);
+		clear_all_is_referenced();
+		usleep(REFERENCE_CLEAR_USEC);
 	}
 	return NULL;
 }
@@ -69,7 +69,7 @@ void initialize(char **argv, pthread_t * thread_id, int *page_frame_count)
 	}
 	*page_frame_count = atoi(argv[1]);
 	pthread_mutex_init(&mutex, NULL);
-	pthread_create(thread_id, NULL, &interrupt_clear_reference_bit, NULL);
+	pthread_create(thread_id, NULL, &interrupt_clear_is_referenced, NULL);
 }
 
 void finalize(pthread_t thread_id)
@@ -86,7 +86,7 @@ STATIC int nru(void)
 	enum PageClass class;
 
 	for (int i = 0; i < MAX_PAGE_COUNT; i++) {
-		if (pages[i].presence_bit == false) {
+		if (pages[i].is_present == false) {
 			continue;
 		}
 		class = get_page_class(i);
@@ -117,7 +117,7 @@ STATIC void pagein(int page_frame_no, int page_index)
 {
 	pthread_mutex_lock(&mutex);
 	pages[page_index].page_frame_no = page_frame_no;
-	pages[page_index].presence_bit = true;
+	pages[page_index].is_present = true;
 	pthread_mutex_unlock(&mutex);
 }
 
@@ -134,7 +134,7 @@ STATIC bool should_pageout(int page_frame_count, int used_page_frame_count)
 
 STATIC bool is_page_fault(int page_index)
 {
-	return !pages[page_index].presence_bit;
+	return !pages[page_index].is_present;
 }
 
 STATIC int get_pageouted_page_index(void)
