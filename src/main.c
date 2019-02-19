@@ -1,12 +1,13 @@
 #include "pagingsim.h"
-#include <stdlib.h>
-#include <stdio.h>
 #include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv)
 {
 	int page_frame_count;
 	pthread_t thread_id;
+	int page_fault_count;
 
 	if (argc != 3) {
 		fprintf(stderr, "usage:%s [PAGE_FRAME_COUNT] [FILE]\n",
@@ -14,11 +15,10 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	page_frame_count = atoi(argv[1]);
+	initialize(argv, &thread_id, &page_frame_count);
 
-	initialize(argv[2], &thread_id);
-
-	printf("! %d %d\n", page_frame_count, execute(page_frame_count));
+	page_fault_count = execute(page_frame_count);
+	printf("! %d %d\n", page_frame_count, page_fault_count);
 	finalize(thread_id);
 	exit(0);
 }

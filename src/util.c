@@ -1,11 +1,12 @@
 #include "util.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 FILE *xfopen(const char *path, const char *mode)
 {
 	FILE *f = fopen(path, mode);
 	if (!f) {
-		perror("failed to reading file\n");
+		perror("Failed to reading file\n");
 		exit(1);
 	}
 	return f;
@@ -19,4 +20,14 @@ void *xmalloc(size_t size)
 		exit(1);
 	}
 	return p;
+}
+
+int xatoi(const char *str)
+{
+	int n;
+	if (sscanf(str, "%d", &n) == 0) {
+		perror("Failed to change format\n");
+		exit(1);
+	}
+	return n;
 }
