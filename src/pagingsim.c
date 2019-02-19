@@ -86,7 +86,7 @@ STATIC int nru(void)
 	enum PageClass class;
 
 	for (int i = 0; i < MAX_PAGE_COUNT; i++) {
-		if (pages[i].is_present == false) {
+		if (!pages[i].is_present) {
 			continue;
 		}
 		class = get_page_class(i);
