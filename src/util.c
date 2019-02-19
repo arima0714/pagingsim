@@ -21,3 +21,13 @@ void *xmalloc(size_t size)
 	}
 	return p;
 }
+
+int xatoi(const char *str)
+{
+	int n;
+	if (sscanf(str, "%d", &n) == 0) {
+		perror("Failed to change format\n");
+		exit(1);
+	}
+	return n;
+}

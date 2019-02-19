@@ -62,7 +62,11 @@ STATIC void *interrupt_clear_is_referenced(void *p)
 
 void initialize(char **argv, pthread_t * thread_id, int *page_frame_count)
 {
-	*page_frame_count = atoi(argv[1]);
+	*page_frame_count = xatoi(argv[1]);
+	if (*page_frame_count <= 0) {
+		perror("Set PAGE_FRAME_COUNT more than 0\n");
+		exit(1);
+	}
 	memory_trace = xfopen(argv[2], "r");
 	pages = xmalloc((sizeof(struct Page) * MAX_PAGE_COUNT));
 	for (int i = 0; i < MAX_PAGE_COUNT; i++) {

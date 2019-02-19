@@ -12,4 +12,5 @@
 
 FILE *xfopen(const char *path, const char *mode);
 void *xmalloc(size_t size);
+int xatoi(const char *str);
 #endif
