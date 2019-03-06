@@ -7,6 +7,7 @@ int main(int argc, char **argv)
 {
 	int page_frame_count;
 	pthread_t thread_id;
+	pthread_attr_t thread_attr;
 	int page_fault_count;
 
 	if (argc != 3) {
@@ -15,7 +16,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	initialize(argv, &thread_id, &page_frame_count);
+	initialize(argv, &thread_id, &page_frame_count, &thread_attr);
 
 	page_fault_count = execute(page_frame_count);
 	printf("! %d %d\n", page_frame_count, page_fault_count);
