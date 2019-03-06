@@ -64,7 +64,7 @@ void initialize(char **argv, pthread_t * thread_id, int *page_frame_count)
 {
 	*page_frame_count = xatoi(argv[1]);
 	if (*page_frame_count <= 0) {
-		perror("Set PAGE_FRAME_COUNT more than 0.\n");
+		perror("Set PAGE_FRAME_COUNT more than 0.");
 		exit(1);
 	}
 	memory_trace = xfopen(argv[2], "r");
