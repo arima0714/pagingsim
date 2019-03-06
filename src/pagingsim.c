@@ -171,7 +171,8 @@ int execute(int page_frame_count)
 				pageout(outed_page_index);
 				used_page_frame_count--;
 			} else {
-				// ページフレームはフレーム番号が小さいものから順に使われていくので、それと同時に1ずつ増加するused_page_frame_countをpage_frame_noに入れて問題ない
+				// ページフレームはフレーム番号が小さいものから順に使われていくので、
+				// それと同時に1ずつ増加するused_page_frame_countをpage_frame_noに入れて問題ない
 				page_frame_no = used_page_frame_count;
 			}
 			pagein(page_frame_no, page_index);
