@@ -6,7 +6,7 @@ FILE *xfopen(const char *path, const char *mode)
 {
 	FILE *f = fopen(path, mode);
 	if (!f) {
-		perror("Failed to reading file\n");
+		perror("Failed to reading file.");
 		exit(1);
 	}
 	return f;
@@ -16,7 +16,7 @@ void *xmalloc(size_t size)
 {
 	void *p = malloc(size);
 	if (!p) {
-		perror("Memory could not be allocated\n");
+		perror("Memory could not be allocated.");
 		exit(1);
 	}
 	return p;
@@ -25,8 +25,8 @@ void *xmalloc(size_t size)
 int xatoi(const char *str)
 {
 	int n;
-	if (sscanf(str, "%d", &n) == 0) {
-		perror("Failed to change format\n");
+	if (sscanf(str, "%d", &n) != 1) {
+		perror("Failed to change format.");
 		exit(1);
 	}
 	return n;

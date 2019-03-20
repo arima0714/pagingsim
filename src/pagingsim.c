@@ -64,7 +64,7 @@ void initialize(char **argv, pthread_t * thread_id, int *page_frame_count)
 {
 	*page_frame_count = xatoi(argv[1]);
 	if (*page_frame_count <= 0) {
-		perror("Set PAGE_FRAME_COUNT more than 0\n");
+		perror("Set PAGE_FRAME_COUNT more than 0.");
 		exit(1);
 	}
 	memory_trace = xfopen(argv[2], "r");
@@ -74,6 +74,7 @@ void initialize(char **argv, pthread_t * thread_id, int *page_frame_count)
 	}
 	pthread_mutex_init(&mutex, NULL);
 	pthread_create(thread_id, NULL, &interrupt_clear_is_referenced, NULL);
+	pthread_detach(*thread_id);
 }
 
 void finalize(pthread_t thread_id)
@@ -81,7 +82,6 @@ void finalize(pthread_t thread_id)
 	free(pages);
 	fclose(memory_trace);
 	pthread_cancel(thread_id);
-	pthread_join(thread_id, NULL);
 }
 
 STATIC int nru(void)
@@ -171,7 +171,8 @@ int execute(int page_frame_count)
 				pageout(outed_page_index);
 				used_page_frame_count--;
 			} else {
-				// ページフレームはフレーム番号が小さいものから順に使われていくので、それと同時に1ずつ増加するused_page_frame_countをpage_frame_noに入れて問題ない
+				// ページフレームはフレーム番号が小さいものから順に使われていくので、
+				// それと同時に1ずつ増加するused_page_frame_countをpage_frame_noに入れて問題ない
 				page_frame_no = used_page_frame_count;
 			}
 			pagein(page_frame_no, page_index);
