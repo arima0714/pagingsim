@@ -76,10 +76,8 @@ void initialize(char **argv, pthread_t * thread_id, int *page_frame_count,
 	pthread_mutex_init(&mutex, NULL);
 	pthread_attr_init(thread_attr);
 	pthread_attr_setdetachstate(thread_attr, PTHREAD_CREATE_DETACHED);
-	printf("before\n");
 	pthread_create(thread_id, thread_attr, &interrupt_clear_is_referenced,
 		       NULL);
-	printf("after\n");
 }
 
 void finalize(pthread_t thread_id)
