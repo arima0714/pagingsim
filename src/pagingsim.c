@@ -60,8 +60,7 @@ STATIC void *interrupt_clear_is_referenced(void *p)
 	return NULL;
 }
 
-void initialize(char **argv, pthread_t * thread_id, int *page_frame_count,
-		pthread_attr_t * thread_attr)
+void initialize(char **argv, pthread_t * thread_id, int *page_frame_count)
 {
 	*page_frame_count = xatoi(argv[1]);
 	if (*page_frame_count <= 0) {
@@ -74,10 +73,8 @@ void initialize(char **argv, pthread_t * thread_id, int *page_frame_count,
 		clear_page(i);
 	}
 	pthread_mutex_init(&mutex, NULL);
-	pthread_attr_init(thread_attr);
-	pthread_attr_setdetachstate(thread_attr, PTHREAD_CREATE_DETACHED);
-	pthread_create(thread_id, thread_attr, &interrupt_clear_is_referenced,
-		       NULL);
+	pthread_create(thread_id, NULL, &interrupt_clear_is_referenced, NULL);
+	pthread_detach(*thread_id);
 }
 
 void finalize(pthread_t thread_id)
