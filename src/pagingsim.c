@@ -85,7 +85,6 @@ void finalize(pthread_t thread_id)
 	free(pages);
 	fclose(memory_trace);
 	pthread_cancel(thread_id);
-	pthread_exit(NULL);
 }
 
 STATIC int nru(void)
